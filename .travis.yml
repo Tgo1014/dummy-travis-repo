@@ -13,7 +13,6 @@ android:
     - 'google-gdk-license-.+'
   components:
     - tools
-    - tools
     - platform-tools
     # The BuildTools version used by your project
     - build-tools-$ANDROID_BUILD_TOOLS_VERSION
