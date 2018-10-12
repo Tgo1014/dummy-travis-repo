@@ -14,6 +14,7 @@ android:
   components:
     - tools
     - platform-tools
+    - tools
     # The BuildTools version used by your project
     - build-tools-$ANDROID_BUILD_TOOLS_VERSION
     # The SDK version used to compile your project
@@ -23,6 +24,9 @@ android:
     - extra-google-m2repository
     - extra-android-m2repository
     - addon-google_apis-google-$ANDROID_API_LEVEL
+    # Emulator images
+    - sys-img-armeabi-v7a-android-27
+    - sys-img-armeabi-v7a-android-17
 
   before_install:
     - yes | sdkmanager "platforms;android-$ANDROID_API_LEVEL"
@@ -45,7 +49,6 @@ android:
   script:
     - echo "Travis branch is $TRAVIS_BRANCH"
     - echo "Travis branch is in pull request $TRAVIS_PULL+REQUEST"
-    - ./gradlew build connectedCheck
     - ./gradlew build check
 
   after_failure:
