@@ -23,9 +23,13 @@ android:
   - tools
   - tools # Running this twice get's the latest build tools (https://github.com/codepath/android_guides/wiki/Setting-up-Travis-CI)
   - platform-tools
-  - android-${ANDROID_API}
+  - android-22
+  - android-24
+  - android-25
+  - android-27
   - build-tools-${ANDROID_BUILD_TOOLS}
   - extra
+  - extra-android-m2repository
 
 env:
   matrix:
