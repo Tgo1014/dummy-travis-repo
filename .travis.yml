@@ -57,7 +57,7 @@ before_install:
 
 # Emulator Management: Create, Start and Wait
 before_script:
-  - android list targets
+  - android list target
   - echo no | android create avd --force -n test -t "android-"$EMULATOR_API_LEVEL --abi $ANDROID_ABI --tag $ANDROID_TAG
   - emulator -list-avds
   - emulator -avd test -no-window &
