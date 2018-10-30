@@ -34,7 +34,6 @@ cache:
 
 before_install:
   - touch /home/travis/.android/repositories.cfg
-  - which sdkmanager
   - yes | sdkmanager --update
   - yes | sdkmanager "system-images;android-23;google_apis;x86_64"
   - yes | sdkmanager "build-tools;27.0.1"
@@ -44,3 +43,6 @@ before_install:
   - sdkmanager --list
   - chmod +x gradlew
   - "./gradlew dependencies || true"
+
+script:
+  - "./gradlew test"
