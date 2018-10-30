@@ -34,20 +34,21 @@ cache:
 
 env:
   matrix:
-    - API=system-images;android-15;google_apis; ABI=armeabi-v7a
-    - API=system-images;android-16;google_apis; ABI=armeabi-v7a
-    - API=system-images;android-17;google_apis; ABI=armeabi-v7a
-    - API=system-images;android-18;google_apis; ABI=armeabi-v7a
-    - API=system-images;android-19;google_apis; ABI=armeabi-v7a
-    - API=system-images;android-21;google_apis; ABI=armeabi-v7a
-    - API=system-images;android-22;google_apis; ABI=armeabi-v7a
-    - API=system-images;android-24;google_apis; ABI=armeabi-v7a
-    - API=system-images;android-24;google_apis; ABI=arm64-v8a
+    - API=system-images;android-15;google_apis;armeabi-v7a
+    - API=system-images;android-16;google_apis;armeabi-v7a
+    - API=system-images;android-17;google_apis;armeabi-v7a
+    - API=system-images;android-18;google_apis;armeabi-v7a
+    - API=system-images;android-19;google_apis;armeabi-v7a
+    - API=system-images;android-21;google_apis;armeabi-v7a
+    - API=system-images;android-22;google_apis;armeabi-v7a
+    - API=system-images;android-24;google_apis;armeabi-v7a
+    - API=system-images;android-24;google_apis;arm64-v8a
 
 before_install:
   - touch /home/travis/.android/repositories.cfg
   - yes | sdkmanager --update
   - yes | sdkmanager "system-images;android-23;google_apis;x86_64"
+  - yes | sdkmanager "$API"
   - yes | sdkmanager "build-tools;27.0.1"
   - yes | sdkmanager "build-tools;27.0.3"
   - yes | sdkmanager --licenses
@@ -57,7 +58,7 @@ before_install:
 # Emulator Management: Create, Start and Wait
 before_script:
   - android-update-sdk --components=sys-img-$ABI-$API --accept-licenses='android-sdk-license-[0-9a-f]{8}'
-  - echo no | android create avd --force --name testAVD --package "$API$ABI"
+  - echo no | android create avd --force --name testAVD --package "$API"
   - emulator -avd test -no-audio -no-window
   - android-wait-for-emulator
   - adb shell input keyevent 82 &
