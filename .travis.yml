@@ -47,8 +47,7 @@ env:
 before_install:
   - touch /home/travis/.android/repositories.cfg
   - yes | sdkmanager --update
-  - yes | sdkmanager "system-images;android-23;google_apis;x86_64"
-  - yes | sdkmanager "$API"
+  - yes | sdkmanager $API
   - yes | sdkmanager "build-tools;27.0.1"
   - yes | sdkmanager "build-tools;27.0.3"
   - yes | sdkmanager --licenses
@@ -57,8 +56,8 @@ before_install:
 
 # Emulator Management: Create, Start and Wait
 before_script:
-  - android-update-sdk --components=sys-img-$ABI-$API --accept-licenses='android-sdk-license-[0-9a-f]{8}'
-  - echo no | android create avd --force --name testAVD --package "$API"
+  - android-update-sdk --components=$API --accept-licenses='android-sdk-license-[0-9a-f]{8}'
+  - echo no | android create avd --force --name testAVD --package $API
   - emulator -avd test -no-audio -no-window
   - android-wait-for-emulator
   - adb shell input keyevent 82 &
