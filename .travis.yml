@@ -48,7 +48,7 @@ before_install:
   - which sdkmanager
   - yes | sdkmanager --update
   - yes | sdkmanager "system-images;"android-"$EMULATOR_API_LEVEL;google_apis;x86_64"
-  - yes | sdkmanager "build-tools;"ANDROID_BUILD_TOOLS_VERSION
+  - yes | sdkmanager "build-tools;"$ANDROID_BUILD_TOOLS_VERSION
   - yes | sdkmanager --licenses
   - which avdmanager
   - sdkmanager --list
