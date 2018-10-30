@@ -1,14 +1,48 @@
 language: android
-android:
-  components:
-    - android-28
-    - build-tools-27.0.3
-
+sudo: required
+jdk: oraclejdk8
+before_cache:
+  - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 env:
   global:
-   # install timeout in minutes (2 minutes by default)
-    - ADB_INSTALL_TIMEOUT=8
+    - ANDROID_API_LEVEL=27
+    - EMULATOR_API_LEVEL=23
+    - ADB_INSTALL_TIMEOUT=15
+    - ANDROID_ABI=armeabi-v7a
 
-# Run assemble and unit tests
+android:
+  components:
+    - tools
+    - platform-tools
+    - extra-android-support
+    - extra-android-m2repository
+    - extra-google-m2repository
+    - addon-google_apis-google-$ANDROID_API_LEVEL
+    - sys-img-armeabi-v7a-android-$ANDROID_API_LEVEL
+    - sys-img-armeabi-v7a-android-$EMULATOR_API_LEVEL
+    - addon-google_apis-google-23
+    - sys-img-x86_64-google_apis-23
+    - build-tools-26.0.1
+    - android-27
+
+cache:
+  directories:
+  - "$HOME/.gradle/caches/"
+  - "$HOME/.gradle/wrapper/"
+  - "$HOME/.android/build-cache"
+
+before_install:
+  - touch /home/travis/.android/repositories.cfg
+  - yes | sdkmanager --update
+  - yes | sdkmanager "system-images;android-23;google_apis;x86_64"
+  - yes | sdkmanager "build-tools;27.0.1"
+  - yes | sdkmanager "build-tools;27.0.3"
+  - yes | sdkmanager --licenses
+  - which avdmanager
+  - sdkmanager --list
+  - chmod +x gradlew
+  - "./gradlew dependencies || true"
+
 script:
-  - ./gradlew clean assembleDebug assembleRelease testDebug
+  - "./gradlew clean test"
