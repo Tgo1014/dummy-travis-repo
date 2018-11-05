@@ -30,7 +30,7 @@ licenses:
 before_install:
   - touch /home/travis/.android/repositories.cfg
   - yes | sdkmanager --update
-  - yes | sdkmanager "API_LEVELtem-images;android-$API_LEVEL;$ABI"
+  - yes | sdkmanager "system-images;android-$API_LEVEL;$ABI"
   - yes | sdkmanager "build-tools;"$BUILD_TOOLS
   # Accept licenses before installing components, no need to echo y for each component
   - yes | sdkmanager --licenses
