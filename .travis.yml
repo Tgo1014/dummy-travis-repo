@@ -33,6 +33,7 @@ android:
     - sys-img-$ABI-android-$API
 
 before_install:
+  - touch /home/travis/.android/repositories.cfg
   # Avoid useless reupload of cache after every build, see https://docs.travis-ci.com/user/languages/android
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
