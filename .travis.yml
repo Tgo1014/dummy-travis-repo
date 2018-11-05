@@ -65,6 +65,7 @@ before_install:
   - touch ~/.android/repositories.cfg
   # install correct version of java on osx
   - if [ $TRAVIS_OS_NAME == "osx" ]; then brew update; brew cask uninstall java; brew tap caskroom/versions; brew cask install java8; fi
+  - yes | sdkmanager --update
   # Accept licenses before installing components, no need to echo y for each component
   - yes | sdkmanager --licenses
   # Platform tools
@@ -79,8 +80,8 @@ before_install:
   # fix timezone warning on osx
   - if [ $TRAVIS_OS_NAME == "osx" ]; then sudo ln -sf /usr/share/zoneinfo/US/Pacific /etc/localtime; fi
   # emulator debug options
-#  - EMU_DEBUG="-debug all -logcat *:e -verbose -show-kernel"
-#  - EMU_ADDITIONAL_OPTIONS="-camera-back none -camera-front none -memory 2048"
+  #  - EMU_DEBUG="-debug all -logcat *:e -verbose -show-kernel"
+  #  - EMU_ADDITIONAL_OPTIONS="-camera-back none -camera-front none -memory 2048"
   # use the absolute emulator path in case older version installed (on default path)
   - $ANDROID_HOME/emulator/emulator -avd test -no-audio -no-window -gpu swiftshader $EMU_ADDITIONAL_OPTIONS ${EMU_DEBUG} &
 before_script:
