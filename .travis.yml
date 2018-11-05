@@ -9,7 +9,7 @@ android:
     - tools
     - platform-tools
     - tools
-    - build-tools-21.1.2
+    - build-tools-27.0.3
     - android-21
     - extra-android-m2repository
     - sys-img-armeabi-v7a-android-21
@@ -19,6 +19,16 @@ licenses:
     - 'google-gdk-license-.+'
     - 'android-sdk-preview-license-.+'
 
+before_install:
+  - touch /home/travis/.android/repositories.cfg
+  - yes | sdkmanager --update
+  - yes | sdkmanager "system-images;$ANDROID_TARGET;google_apis;$ANDROID_ABI"
+  - yes | sdkmanager "build-tools;27.0.3"
+  - yes | sdkmanager --licenses
+  - which avdmanager
+  - sdkmanager --list
+  - chmod +x gradlew
+  - "./gradlew dependencies || true"
 
 before_script:
   # compile the code so gradle and dependencies are all downloaded
