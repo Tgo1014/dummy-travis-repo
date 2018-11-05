@@ -23,7 +23,7 @@ licenses:
 before_install:
   - touch /home/travis/.android/repositories.cfg
   - yes | sdkmanager --update
-  - yes | sdkmanager $API
+  - yes | sdkmanager "$API"
   - yes | sdkmanager "build-tools;27.0.3"
   - yes | sdkmanager --licenses
   - which avdmanager
