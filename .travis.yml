@@ -53,6 +53,7 @@ android:
     - sys-img-armeabi-v7a-android-21
 
 before_install:
+  - chmod +x ./scripts/android-wait-for-emulator.sh
   # Install android tools
   - ANDROID_TOOLS=4333796 # android-28
   - export ANDROID_HOME=~/android-sdk-linux
