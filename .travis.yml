@@ -35,9 +35,4 @@ before_script:
 script:
     - ./gradlew checkstyle lintProductionRelease testProductionReleaseUnitTest
 
-branches:
-  only:
-    - master
-    - production
-
 # after_success: uncomment this and add your own deployment targets
