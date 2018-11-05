@@ -1,32 +1,42 @@
 language: android
 jdk: oraclejdk8
-os: linux
+sudo: false
+env:
+    - GRADLE_OPTS='-Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"'
+
+machine:
+   environment:
+     GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"'
 
 android:
   components:
     - tools
     - platform-tools
-    - build-tools-28.0.2
-    - android-28
-
-    # Additional components
-    - extra-google-m2repository
+    - build-tools-26.0.2
+    - android-26
     - extra-android-m2repository
-    - extra-android-support
-    - addon-google_apis-google-22
-
-    # Emulator for the tests
-    - sys-img-armeabi-v7a-android-21
-    - sys-img-armeabi-v7a-android-22
-    - sys-img-armeabi-v7a-android-25
-
-licenses:
+    # Uncomment this if you need emulator
+    - sys-img-x86-android-23
+  licenses:
     - 'android-sdk-license-.+'
-    - 'google-gdk-license-.+'
-    - 'android-sdk-preview-license-.+'
+
+before_install:
+    - export TERM=dumb
+    - chmod +x gradlew
+
+# Uncomment this if you need emulator
+# before_script:
+  - echo no | android create avd --force -n test -t android-21 --abi x86
+  - emulator -avd test -no-skin -no-audio -no-window &
+  - android-wait-for-emulator 
+  - adb shell input keyevent 82 &
 
 script:
-  - ./gradlew clean assemble test -a
+    - ./gradlew checkstyle lintProductionRelease testProductionReleaseUnitTest
 
-notifications:
-  email: false
+branches:
+  only:
+    - master
+    - production
+
+# after_success: uncomment this and add your own deployment targets
