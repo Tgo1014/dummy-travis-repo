@@ -2,7 +2,7 @@
 # sudo: required --> run dist image in VM on Google Compute Engine for slower startup (runs faster)
 # sudo and dist are ignored on osx
 sudo: required
-dist: trusty
+dist: precise
 os:
   - linux
   - osx
@@ -84,7 +84,7 @@ before_install:
   #  - EMU_DEBUG="-debug all -logcat *:e -verbose -show-kernel"
   #  - EMU_ADDITIONAL_OPTIONS="-camera-back none -camera-front none -memory 2048"
   # use the absolute emulator path in case older version installed (on default path)
-  - emulator -avd test -no-window -gpu swiftshader $EMU_ADDITIONAL_OPTIONS ${EMU_DEBUG} &
+  - $ANDROID_HOME/emulator/emulator -avd test -no-window -gpu swiftshader $EMU_ADDITIONAL_OPTIONS ${EMU_DEBUG} &
 before_script:
   # Wait for emulator to startup.
   - ./scripts/android-wait-for-emulator.sh
