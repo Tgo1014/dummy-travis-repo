@@ -1,74 +1,28 @@
 language: android
 jdk: oraclejdk8
 sudo: false
-
 env:
-    matrix:
-        - API=system-images;android-15;google_apis;armeabi-v7a
-        - API=system-images;android-16;google_apis;armeabi-v7a
-        - API=system-images;android-17;google_apis;armeabi-v7a
-        - API=system-images;android-18;google_apis;armeabi-v7a
-        - API=system-images;android-19;google_apis;armeabi-v7a
-        - API=system-images;android-21;google_apis;armeabi-v7a
-        - API=system-images;android-22;google_apis;armeabi-v7a
-        - API=system-images;android-24;google_apis;armeabi-v7a
-        - API=system-images;android-24;google_apis;arm64-v8a
-
-    global:
-        - ADB_INSTALL_TIMEOUT=10    #Time out to 10 mins
-
-before_cache:
-    - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
-
-cache:
-  directories:      #Cache all dirs under .gradle folder
-    - $HOME/.gradle/daemon      #Cache daemon logs
-    - $HOME/.gradle/native      #Cache library downloaded from the gradle dependency
-    - $HOME/.gradle/wrapper     #Cache the gradle
-
+  matrix:
+    - ANDROID_TARGET=android-21  ANDROID_ABI=armeabi-v7a
 android:
-    update_sdk: true
-    components:
-        - platform-tools
-        - tools
-        - build-tools-25.0.0
-        - android-25
-
-        # Additional components
-        - extra-google-google_play_services
-        - extra-google-m2repository
-        - extra-android-m2repository
-
-        #system images
-        - sys-img-armeabi-v7a-android-19
-        - sys-img-armeabi-v7a-android-21
-
-licenses:
-    - 'android-sdk-preview-license-52d11cd2'
-    - 'android-sdk-license-.+'
-    - 'google-gdk-license-.+'
-
-before_install:
-  - touch /home/travis/.android/repositories.cfg
-  - yes | sdkmanager --update
-  - yes | sdkmanager "system-images;android-23;google_apis;x86_64"
-  - yes | sdkmanager "$API"
-  - yes | sdkmanager "build-tools;27.0.1"
-  - yes | sdkmanager "build-tools;27.0.3"
-  - yes | sdkmanager --licenses
+  components:
+    - tools
+    - platform-tools
+    - tools
+    - build-tools-21.1.2
+    - android-21
+    - extra-android-m2repository
+    - sys-img-armeabi-v7a-android-21
 
 before_script:
-    - chmod +x gradlew      #Grand permissions
-    - android list targets
-    - echo no | android create avd --force --name testAVD --package "$API"   #Create AVD for given api
-    - emulator -avd test -no-skin -no-audio -no-window &    #Start emulator
+  # compile the code so gradle and dependencies are all downloaded
+  - ./gradlew assembleClientDebug
+  # Create and start emulator
+  - echo no | android create avd --force -n test -t $ANDROID_TARGET --abi $ANDROID_ABI
+  - emulator -avd test -no-skin -no-audio -no-window &
+  - android-wait-for-emulator
+  - adb devices
+  - adb shell input keyevent 82 &
+  - adb logcat -s TestRunner &
 
-script:
-    - echo "Travis branch is $TRAVIS_BRANCH"
-    - echo "Travis branch is in pull request $TRAVIS_PULL+REQUEST"
-    - android-wait-for-emulator
-    - adb devices   #Display list of devices
-    - adb shell input keyevent 82 &
-    - ./gradlew connectedCheck coveralls -PdisablePreDex --stacktrace
-
-after_failure: "cat $TRAVIS_BUILD_DIR/app/build/outputs/lint-results-debug.xml"
+script: ./gradlew connectedCheck
