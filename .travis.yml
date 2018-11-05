@@ -13,10 +13,13 @@ android:
     - android-21
     - extra-android-m2repository
     - sys-img-armeabi-v7a-android-21
+
 licenses:
     - 'android-sdk-license-.+'
     - 'google-gdk-license-.+'
     - 'android-sdk-preview-license-.+'
+
+
 before_script:
   # compile the code so gradle and dependencies are all downloaded
   - ./gradlew assembleClientDebug
