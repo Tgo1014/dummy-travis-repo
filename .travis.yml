@@ -39,7 +39,7 @@ before_script:
   - ./gradlew assembleDebug
   # Create and start emulator
   - echo no | android create avd --force --name testAVD --package $API   #Create AVD for given api
-  - emulator -avd testAVD -no-skin -no-window &
+  - $ANDROID_HOME/emulator/emulator -avd testAVD -no-skin -no-window &
   - android-wait-for-emulator
   - adb devices
   - adb shell input keyevent 82 &
