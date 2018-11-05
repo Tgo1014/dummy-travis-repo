@@ -3,7 +3,8 @@ jdk: oraclejdk8
 sudo: false
 env:
   matrix:
-    - ANDROID_TARGET=android-21  ANDROID_ABI=armeabi-v7a
+    - API=system-images;android-21;google_apis;armeabi-v7a
+
 android:
   components:
     - tools
@@ -22,7 +23,7 @@ licenses:
 before_install:
   - touch /home/travis/.android/repositories.cfg
   - yes | sdkmanager --update
-  - yes | sdkmanager "system-images;$ANDROID_TARGET;google_apis;$ANDROID_ABI"
+  - yes | sdkmanager $API
   - yes | sdkmanager "build-tools;27.0.3"
   - yes | sdkmanager --licenses
   - which avdmanager
@@ -34,7 +35,7 @@ before_script:
   # compile the code so gradle and dependencies are all downloaded
   - ./gradlew assembleDebug
   # Create and start emulator
-  - echo no | android create avd --force --name test --target "android-$ANDROID_TARGET" --abi $ANDROID_ABI
+  - echo no | android create avd --force --name testAVD --package "$API"   #Create AVD for given api
   - emulator -avd test -no-skin -no-audio -no-window &
   - android-wait-for-emulator
   - adb devices
