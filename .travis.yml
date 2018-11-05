@@ -4,8 +4,16 @@ sudo: false
 
 env:
     matrix:
-        - ANDROID_TARGET=android-19 ANDROID_ABI=armeabi-v7a
-        - ANDROID_TARGET=android-21 ANDROID_ABI=armeabi-v7a
+        - API=system-images;android-15;google_apis;armeabi-v7a
+        - API=system-images;android-16;google_apis;armeabi-v7a
+        - API=system-images;android-17;google_apis;armeabi-v7a
+        - API=system-images;android-18;google_apis;armeabi-v7a
+        - API=system-images;android-19;google_apis;armeabi-v7a
+        - API=system-images;android-21;google_apis;armeabi-v7a
+        - API=system-images;android-22;google_apis;armeabi-v7a
+        - API=system-images;android-24;google_apis;armeabi-v7a
+        - API=system-images;android-24;google_apis;arm64-v8a
+
     global:
         - ADB_INSTALL_TIMEOUT=10    #Time out to 10 mins
 
@@ -40,10 +48,19 @@ licenses:
     - 'android-sdk-license-.+'
     - 'google-gdk-license-.+'
 
+before_install:
+  - touch /home/travis/.android/repositories.cfg
+  - yes | sdkmanager --update
+  - yes | sdkmanager "system-images;android-23;google_apis;x86_64"
+  - yes | sdkmanager "$API"
+  - yes | sdkmanager "build-tools;27.0.1"
+  - yes | sdkmanager "build-tools;27.0.3"
+  - yes | sdkmanager --licenses
+
 before_script:
     - chmod +x gradlew      #Grand permissions
     - android list targets
-    - echo no | android create avd --force --name test --target $ANDROID_TARGET --abi $ANDROID_ABI    #Create AVD for given api
+    - echo no | android create avd --force --name testAVD --package "$API"   #Create AVD for given api
     - emulator -avd test -no-skin -no-audio -no-window &    #Start emulator
 
 script:
