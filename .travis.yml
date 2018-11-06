@@ -13,14 +13,16 @@ dist: precise
 env:
   global:
     - ADB_INSTALL_TIMEOUT=10 # default is 2 minutes and sometimes is not enough
-    - BUILD_TOOLS="27.0.3"
+    - BUILD_TOOLS="28.0.3"
   matrix:
-    - API_LEVEL=25 ABI="google_apis;arm64-v8a"
+    - API_LEVEL=28 ABI="google_apis;armeabi-v7a"
+    - API_LEVEL=27 ABI="google_apis;armeabi-v7a"
+    - API_LEVEL=26 ABI="google_apis;armeabi-v7a"
     - API_LEVEL=25 ABI="google_apis;armeabi-v7a"
-    - API_LEVEL=24 ABI="google_apis;arm64-v8a"
     - API_LEVEL=24 ABI="google_apis;armeabi-v7a"
     - API_LEVEL=23 ABI="google_apis;armeabi-v7a"
-    - API_LEVEL=21 ABI="default;armeabi-v7a"
+    - API_LEVEL=22 ABI="google_apis;armeabi-v7a"
+    - API_LEVEL=21 ABI="google_apis;armeabi-v7a"
 
 android:
   components:
@@ -31,6 +33,15 @@ android:
     - android-$API
     - extra-android-m2repository
     - sys-img-$ABI-android-$API
+
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+    - $HOME/.android/build-cache
 
 before_install:
   - touch /home/travis/.android/repositories.cfg
@@ -54,4 +65,7 @@ before_script:
   - adb shell input keyevent 82 &
 
 script:
+  # run tests  against the emulator
+  - "./gradlew clean connectedAndroidTest"
+  # run tests  against the JVM
   - "./gradlew clean test"
