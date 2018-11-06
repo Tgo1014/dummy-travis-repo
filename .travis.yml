@@ -12,17 +12,15 @@ dist: precise
 
 env:
   global:
-    - ADB_INSTALL_TIMEOUT=55 # default is 2 minutes and sometimes is not enough
+    - ADB_INSTALL_TIMEOUT=8 # default is 2 minutes and sometimes is not enough
     - BUILD_TOOLS="28.0.3"
+    - EMULATOR_API=24
   matrix:
-    - API_LEVEL=28 ABI="google_apis;armeabi-v7a"
-    - API_LEVEL=27 ABI="google_apis;armeabi-v7a"
-    - API_LEVEL=26 ABI="google_apis;armeabi-v7a"
-    - API_LEVEL=25 ABI="google_apis;armeabi-v7a"
-#    - API_LEVEL=24 ABI="google_apis;armeabi-v7a"
-#    - API_LEVEL=23 ABI="google_apis;armeabi-v7a"
-#    - API_LEVEL=22 ABI="google_apis;armeabi-v7a"
-#    - API_LEVEL=21 ABI="google_apis;armeabi-v7a"
+    - API_LEVEL=25 ABI ="arm64-v8a"
+    - API_LEVEL=24 ABI ="arm64-v8a"
+    - API_LEVEL=23 ABI ="armeabi-v7a"
+    - API_LEVEL=22 ABI ="armeabi-v7a"
+    - API_LEVEL=21 ABI ="armeabi-v7a"
 
 android:
   components:
@@ -31,8 +29,10 @@ android:
     - tools
     - build-tools-$BUILD_TOOLS
     - android-$API
+    - android-$EMULATOR_API
     - extra-android-m2repository
     - sys-img-$ABI-android-$API
+    - sys-img-armeabi-v7a-android-$EMULATOR_API_LEVEL
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
@@ -49,7 +49,7 @@ before_install:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
   - yes | sdkmanager --update
-  - yes | sdkmanager "system-images;android-$API_LEVEL;$ABI"
+  - yes | sdkmanager "system-images;android-$API_LEVEL;google_apis;$ABI"
   - yes | sdkmanager "build-tools;"$BUILD_TOOLS
   # Accept licenses before installing components, no need to echo y for each component
   - yes | sdkmanager --licenses
@@ -58,7 +58,7 @@ before_install:
 
 before_script:
   # Create and start emulator
-  - echo no | avdmanager create avd -n testAVD -k "system-images;android-$API_LEVEL;$ABI"
+  - echo no | avdmanager create avd -n testAVD -k "system-images;android-$API_LEVEL;google_apis;$ABI"
   - $ANDROID_HOME/emulator/emulator -avd testAVD -no-skin -no-window &
   - android-wait-for-emulator
   - adb devices
