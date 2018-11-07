@@ -12,7 +12,7 @@ dist: precise
 
 env:
   global:
-    - ADB_INSTALL_TIMEOUT=8 # default is 2 minutes and sometimes is not enough
+    - ADB_INSTALL_TIMEOUT=20 # default is 2 minutes and sometimes is not enough
     - BUILD_TOOLS="28.0.3"
     - EMULATOR_API=24
   matrix:
