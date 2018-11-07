@@ -66,6 +66,6 @@ before_script:
 
 script:
   # run tests  against the emulator
-  - "./gradlew clean connectedAndroidTest"
+  #- "./gradlew clean connectedAndroidTest"
   # run tests  against the JVM
   - "./gradlew clean test"
